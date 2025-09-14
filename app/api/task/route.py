@@ -31,6 +31,24 @@ async def get_task(
 
     return task
 
+@routet.get("/")
+async def get_all_tasks(
+    db: AsyncSession = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    tasks = await TaskCRUD.get_tasks_by_user(
+        db=db,
+        user_id=current_user.id
+    )
+
+    if not tasks:
+        raise HTTPException(
+            status_code=HTTP_404_NOT_FOUND,
+            detail="Tasks not found"
+        )
+
+    return tasks
+
 @router.post("/create", status_code=HTTP_201_CREATED)
 async def create_task(
     task: TaskCreate,
