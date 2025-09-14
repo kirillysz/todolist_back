@@ -15,7 +15,9 @@ DB_HOST=db
 DB_PORT=5432
 DB_USER=postgres
 DB_PASSWORD=postgres
-DB_NAME=dbname
+DB_NAME=mydb
+
+ORIGINS=http://localhost:5173
 
 SECRET_KEY=your_secret
 ALGORITHM=HS256
@@ -28,3 +30,4 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```bash
 docker compose up --build -d
 ```
+
