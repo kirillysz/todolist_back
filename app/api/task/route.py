@@ -31,7 +31,7 @@ async def get_task(
 
     return task
 
-@routet.get("/")
+@router.get("/")
 async def get_all_tasks(
     db: AsyncSession = Depends(get_db),
     current_user = Depends(get_current_user)
