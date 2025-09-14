@@ -38,7 +38,7 @@ async def register_user(
         value=access_token,
         httponly=True,
         secure=False, # !!!!! НА ПРОДЕ TRUE
-        samesite="strict"
+        samesite="lax"
     )
     return {"message": "Logged in"}
 
@@ -80,6 +80,6 @@ async def login_user(
         value=access_token,
         httponly=True,
         secure=False, # !!!!! НА ПРОДЕ TRUE
-        samesite="strict"
+        samesite="lax"
     )
     return {"message": "Logged in"}
