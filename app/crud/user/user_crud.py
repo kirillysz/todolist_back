@@ -24,19 +24,6 @@ class UserCRUD:
             return False
 
     @staticmethod
-    async def get_user_by_username(
-        db: AsyncSession,
-        username: str
-    ) -> User | None:
-        user = await db.execute(
-            select(User).where(
-                User.username == username
-            )
-        )
-
-        return user.scalar_one_or_none()
-
-    @staticmethod
     async def create_user(
         db: AsyncSession, 
         user_data
