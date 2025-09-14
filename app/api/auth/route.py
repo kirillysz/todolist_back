@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Response, Request
 from fastapi.security import OAuth2PasswordRequestForm
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,7 +7,7 @@ from starlette.status import HTTP_201_CREATED
 from app.schemas.user.user import UserCreate
 
 from app.db.session import get_db
-from app.core.auth_key import generate_access_token
+from app.core.auth_key import generate_access_token, verify_access_token
 
 from app.crud.user.user_crud import UserCRUD
 from app.core.security import pass_settings
@@ -83,3 +83,29 @@ async def login_user(
         samesite="lax"
     )
     return {"message": "Logged in"}
+
+
+@router.get("/check")
+async def auth_check(
+    request: Request,
+    db: AsyncSession = Depends(get_db)
+):
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    try:
+        payload = verify_access_token(token)
+        username: str = payload.get("sub")
+
+        if username is None:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        
+        user = await UserCRUD.get_user_by_username(db, username)
+        if not user:
+            raise HTTPException(status_code=401, detail="User not found")
+        
+        return {"status": "ok", "username": user.username}
+    
+    except Exception as err:
+        raise HTTPException(status_code=401, detail="Invalid token")

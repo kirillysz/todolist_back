@@ -23,7 +23,7 @@ class UserCRUD:
         else:
             return False
 
-   @staticmethod
+    @staticmethod
     async def get_user_by_username(
         db: AsyncSession,
         username: str
